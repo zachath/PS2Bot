@@ -1,5 +1,6 @@
 //Zacharias Thorell
 
+import lib.Faction;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
@@ -7,7 +8,6 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-
 import javax.security.auth.login.LoginException;
 
 public class PS2Bot extends ListenerAdapter {
@@ -27,13 +27,31 @@ public class PS2Bot extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event)
     {
         Message msg = event.getMessage();
-        if (msg.getContentRaw().equals("!ping"))
+        if (msg.getContentRaw().equals("!nc"))
         {
             MessageChannel channel = event.getChannel();
             long time = System.currentTimeMillis();
             channel.sendMessage("Pong!") /* => RestAction<Message> */
                     .queue(response /* => Message */ -> {
-                        response.editMessageFormat("Pong: %d ms", System.currentTimeMillis() - time).queue();
+                        response.editMessageFormat(Faction.NC.toString()).queue();
+                    });
+        }
+        else if (msg.getContentRaw().equals("!tr"))
+        {
+            MessageChannel channel = event.getChannel();
+            long time = System.currentTimeMillis();
+            channel.sendMessage("Pong!") /* => RestAction<Message> */
+                    .queue(response /* => Message */ -> {
+                        response.editMessageFormat(Faction.TR.toString()).queue();
+                    });
+        }
+        else if (msg.getContentRaw().equals("!vs"))
+        {
+            MessageChannel channel = event.getChannel();
+            long time = System.currentTimeMillis();
+            channel.sendMessage("Pong!") /* => RestAction<Message> */
+                    .queue(response /* => Message */ -> {
+                        response.editMessageFormat(Faction.VS.toString()).queue();
                     });
         }
     }
