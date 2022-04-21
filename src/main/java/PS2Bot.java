@@ -1,16 +1,15 @@
 //Zacharias Thorell
 
+import commands.CharacterSubscribeCommand;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import ps2lib.CensusAPI;
-import ps2lib.Faction;
 
 import javax.security.auth.login.LoginException;
 
@@ -29,24 +28,28 @@ public class PS2Bot extends ListenerAdapter {
                 .build();
     }
 
+    /**
+     * Handles incoming messages.
+     * @param event Received messages.
+     */
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
     {
-        Message msg = event.getMessage();
-        if (msg.getContentRaw().equals("!nc"))
-        {
-            MessageChannel channel = event.getChannel();
-            channel.sendMessage(Faction.NC.fullName).queue();
+        //Ignore other bots.
+        if (event.getAuthor().isBot()) {
+            return;
         }
-        else if (msg.getContentRaw().equals("!tr"))
-        {
-            MessageChannel channel = event.getChannel();
-            channel.sendMessage(Faction.TR.fullName).queue();
+
+        String content = event.getMessage().getContentRaw().toLowerCase();
+        MessageChannel channel = event.getChannel();
+
+        if (content.startsWith("charsub")) {
+            new CharacterSubscribeCommand().run(event);
         }
-        else if (msg.getContentRaw().equals("!vs"))
-        {
-            MessageChannel channel = event.getChannel();
-            channel.sendMessage(Faction.VS.fullName).queue();
+
+        //Unknown commands.
+        else {
+            channel.sendMessage("Unknown command.").queue();
         }
     }
 }

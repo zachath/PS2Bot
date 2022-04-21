@@ -20,7 +20,11 @@
             <artifactId>JDA</artifactId>
             <version>5.0.0-alpha.9</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.5.2</version>
+        </dependency>
     </dependencies>
 
 </project>
