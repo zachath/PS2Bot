@@ -1,6 +1,6 @@
 //Zacharias Thorell
 
-import lib.Faction;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
@@ -8,18 +8,24 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+
+import ps2lib.CensusAPI;
+import ps2lib.Faction;
+
 import javax.security.auth.login.LoginException;
 
 public class PS2Bot extends ListenerAdapter {
     public static void main(String[] args) throws LoginException {
-        if (args.length != 1) {
-            System.out.println("A token and solely the bot token has to be provided as a command line argument.");
+        if (args.length != 2) {
+            System.out.println("Bot token ([0]) and census api service id ([1]) have to be provided as a command line argument.");
             System.exit(1);
         }
 
-        JDABuilder.createDefault(args[0], GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES)
+        CensusAPI.setServiceId(args[1]);
+        JDABuilder.createDefault(args[0], GatewayIntent.DIRECT_MESSAGES)
                 .addEventListeners(new PS2Bot())
                 .setActivity(Activity.listening("To the Daybreak API"))
+                .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
                 .build();
     }
 
@@ -30,29 +36,17 @@ public class PS2Bot extends ListenerAdapter {
         if (msg.getContentRaw().equals("!nc"))
         {
             MessageChannel channel = event.getChannel();
-            long time = System.currentTimeMillis();
-            channel.sendMessage("Pong!") /* => RestAction<Message> */
-                    .queue(response /* => Message */ -> {
-                        response.editMessageFormat(Faction.NC.toString()).queue();
-                    });
+            channel.sendMessage(Faction.NC.fullName).queue();
         }
         else if (msg.getContentRaw().equals("!tr"))
         {
             MessageChannel channel = event.getChannel();
-            long time = System.currentTimeMillis();
-            channel.sendMessage("Pong!") /* => RestAction<Message> */
-                    .queue(response /* => Message */ -> {
-                        response.editMessageFormat(Faction.TR.toString()).queue();
-                    });
+            channel.sendMessage(Faction.TR.fullName).queue();
         }
         else if (msg.getContentRaw().equals("!vs"))
         {
             MessageChannel channel = event.getChannel();
-            long time = System.currentTimeMillis();
-            channel.sendMessage("Pong!") /* => RestAction<Message> */
-                    .queue(response /* => Message */ -> {
-                        response.editMessageFormat(Faction.VS.toString()).queue();
-                    });
+            channel.sendMessage(Faction.VS.fullName).queue();
         }
     }
 }
