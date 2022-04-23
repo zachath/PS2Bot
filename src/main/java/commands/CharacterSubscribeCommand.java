@@ -4,34 +4,33 @@ package commands;
 
 import ps2lib.CensusAPI;
 import ps2lib.PS2PlayerFactory;
+import streaming.ClientCollection;
 import streaming.LiveStreamingClient;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class CharacterSubscribeCommand extends Command {
+    public static final String COMMAND_SHORT_HAND = "charsub";
+
+    /**
+     * @param event
+     */
     @Override
     public void run(MessageReceivedEvent event) {
         User sender = event.getAuthor();
+        ClientCollection.addUser(sender);
 
-        String contentRaw = event.getMessage().getContentRaw();
-        String[] args = contentRaw.split(" ");
+        String content = event.getMessage().getContentRaw();
 
-        String streamEvent = args[1];
-        String character = args[2];
 
-        LiveStreamingClient client;
-
-       try {
-           client = new LiveStreamingClient(sender);
-           client.connectBlocking();
-           String characterID = PS2PlayerFactory.createPlayerFromName(character).id;
-
-           //debug
-           System.out.printf("Id: %s, event: %s \n", characterID, streamEvent);
-
-           client.send(CensusAPI.formatPayLoadCharacter(List.of(characterID), List.of(streamEvent)));
-       } catch (Exception ignored) {}
+        List<List<String>> input = getInput(content.substring(COMMAND_SHORT_HAND.length() + 1));
+        System.out.println(input.get(0));
+        System.out.println(input.get(1));
     }
 }
