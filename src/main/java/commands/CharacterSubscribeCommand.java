@@ -34,7 +34,11 @@ public class CharacterSubscribeCommand extends Command {
 
         try {
             LiveStreamingClient client = ClientCollection.getClient(sender);
-            client.connectBlocking();
+
+            //Do not try and connect again if already connected.
+            if (!client.isOpen()) {
+                client.connectBlocking();
+            }
 
             List<String> characterIDs = new ArrayList<>();
 

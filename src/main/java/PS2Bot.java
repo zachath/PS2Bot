@@ -13,6 +13,8 @@ import ps2lib.CensusAPI;
 
 import javax.security.auth.login.LoginException;
 
+//TODO: Finish PlayerLogin (input, checks, multiple event and characters unsubscribe) and ensure it works with multiple users.
+
 public class PS2Bot extends ListenerAdapter {
     public static void main(String[] args) throws LoginException {
         if (args.length != 2) {
@@ -43,7 +45,7 @@ public class PS2Bot extends ListenerAdapter {
         String content = event.getMessage().getContentRaw().toLowerCase();
         MessageChannel channel = event.getChannel();
 
-        if (content.startsWith("charsub")) {
+        if (content.startsWith(CharacterSubscribeCommand.COMMAND_SHORT_HAND)) {
             new CharacterSubscribeCommand().run(event);
         }
 
