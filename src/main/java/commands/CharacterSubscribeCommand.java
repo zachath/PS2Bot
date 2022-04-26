@@ -1,5 +1,9 @@
 //Zacharias Thorell
 
+//TODO: Keep track of subscribed events by user and not send messages that are already filed.
+//TODO: If the events or characters are empty (after pruning) then do not send any message to the API.
+//TODO: Notify the user of if any message are not sent because either of the two above.
+
 package commands;
 
 import ps2lib.CensusAPI;
@@ -29,8 +33,14 @@ public class CharacterSubscribeCommand extends Command {
 
         String content = event.getMessage().getContentRaw();
 
+        String input = content.substring(COMMAND_SHORT_HAND.length() + 1);
+
+        if (!inputMatchesFormat(input, event.getChannel())) {
+            return;
+        }
+
         //Extracts the events and characters into two lists.
-        List<List<String>> input = getInput(content.substring(COMMAND_SHORT_HAND.length() + 1));
+        List<List<String>> args = getInput(input);
 
         try {
             LiveStreamingClient client = ClientCollection.getClient(sender);
@@ -42,13 +52,13 @@ public class CharacterSubscribeCommand extends Command {
 
             List<String> characterIDs = new ArrayList<>();
 
-            for (String character : input.get(CHARACTERS_LIST_INDEX)) {
+            for (String character : args.get(CHARACTERS_LIST_INDEX)) {
                 try {
                     characterIDs.add(PS2PlayerFactory.createPlayerFromName(character).id);
                 } catch (IllegalArgumentException ignored) {} //Ignore the failures to find players.
             }
 
-            client.send(CensusAPI.formatPayLoadCharacter(characterIDs, input.get(EVENTS_LIST_INDEX)));
+            client.send(CensusAPI.formatPayLoadCharacter(characterIDs, args.get(EVENTS_LIST_INDEX)));
 
         } catch (Exception e) {
             e.printStackTrace();

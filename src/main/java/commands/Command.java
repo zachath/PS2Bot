@@ -2,6 +2,7 @@
 
 package commands;
 
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import ps2lib.CensusAPI;
 
@@ -12,9 +13,12 @@ public abstract class Command {
     protected final static int EVENTS_LIST_INDEX = 0;
     protected final static int CHARACTERS_LIST_INDEX = 1;
 
+    //Makes it easier if I want to change the format later.
     protected final static String OPENING_CURLY = "{";
     protected final static String CLOSING_CURLY = "}";
     protected final static String SPLIT_REGEX = ", ";
+
+    protected final static String COMMAND_REGEX = String.format("(\\%s(.*?)\\%s \\%s(.*?)\\%s)", OPENING_CURLY, CLOSING_CURLY, OPENING_CURLY, CLOSING_CURLY);
 
     public abstract void run(MessageReceivedEvent event);
 
@@ -32,6 +36,22 @@ public abstract class Command {
         events = pruneEvents(events);
 
         return List.of(events, chars);
+    }
+
+    /**
+     * Checks whether the input is in the correct format.
+     * @param input User input string.
+     * @param channel event MessageChannel to send response in case of error.
+     * @return if input matches or not.
+     */
+    protected boolean inputMatchesFormat(String input, MessageChannel channel) {
+        if (input.matches(COMMAND_REGEX)) {
+            return true;
+        }
+        else {
+            channel.sendMessage("The given input does not match the required format.").queue();
+            return false;
+        }
     }
 
     /**
