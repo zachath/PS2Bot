@@ -31,7 +31,7 @@ public class CharacterSubscribeCommand extends Command {
 
         String input = content.substring(COMMAND_SHORT_HAND.length() + 1);
 
-        if (!inputMatchesFormat(input, event.getChannel())) {
+        if (!inputMatchesFormat(input, TWO_COLLECTION_COMMAND_REGEX, event.getChannel())) {
             return;
         }
 

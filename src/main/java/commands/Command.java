@@ -18,7 +18,7 @@ public abstract class Command {
     protected final static String CLOSING_CURLY = "}";
     protected final static String SPLIT_REGEX = ", ";
 
-    protected final static String COMMAND_REGEX = String.format("(\\%s(.*?)\\%s \\%s(.*?)\\%s)", OPENING_CURLY, CLOSING_CURLY, OPENING_CURLY, CLOSING_CURLY);
+    protected final static String TWO_COLLECTION_COMMAND_REGEX = String.format("(\\%s(.*?)\\%s \\%s(.*?)\\%s)", OPENING_CURLY, CLOSING_CURLY, OPENING_CURLY, CLOSING_CURLY);
 
     public abstract void run(MessageReceivedEvent event);
 
@@ -41,11 +41,12 @@ public abstract class Command {
     /**
      * Checks whether the input is in the correct format.
      * @param input User input string.
+     * @param regex The regex to use to check the format, use the ones provided in Command.
      * @param channel event MessageChannel to send response in case of error.
      * @return if input matches or not.
      */
-    protected boolean inputMatchesFormat(String input, MessageChannel channel) {
-        if (input.matches(COMMAND_REGEX)) {
+    protected boolean inputMatchesFormat(String input, String regex, MessageChannel channel) {
+        if (input.matches(regex)) {
             return true;
         }
         else {
