@@ -1,9 +1,5 @@
 //Zacharias Thorell
 
-//TODO: Keep track of subscribed events by user and not send messages that are already filed.
-//TODO: If the events or characters are empty (after pruning) then do not send any message to the API.
-//TODO: Notify the user of if any message are not sent because either of the two above.
-
 package commands;
 
 import ps2lib.CensusAPI;
@@ -58,7 +54,9 @@ public class CharacterSubscribeCommand extends Command {
                 } catch (IllegalArgumentException ignored) {} //Ignore the failures to find players.
             }
 
-            client.send(CensusAPI.formatPayLoadCharacter(characterIDs, args.get(EVENTS_LIST_INDEX)));
+            List<String> events = args.get(EVENTS_LIST_INDEX);
+
+            client.send(CensusAPI.formatPayLoadCharacter(characterIDs, events));
 
         } catch (Exception e) {
             e.printStackTrace();

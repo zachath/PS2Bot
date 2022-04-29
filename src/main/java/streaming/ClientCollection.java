@@ -3,11 +3,11 @@
 package streaming;
 
 import net.dv8tion.jda.api.entities.User;
+
 import ps2lib.IllegalServiceIdException;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ClientCollection {
     //Stores the active LiveStreamingClients by user.
