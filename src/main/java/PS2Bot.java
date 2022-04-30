@@ -1,6 +1,8 @@
 //Zacharias Thorell
 
 import commands.CharacterSubscribeCommand;
+import commands.InfoCommand;
+import commands.UnsubscribeCommand;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -13,9 +15,11 @@ import ps2lib.CensusAPI;
 
 import javax.security.auth.login.LoginException;
 
-//TODO: Finish PlayerLogin (input, checks, multiple event and characters unsubscribe) and ensure it works with multiple users.
-
 public class PS2Bot extends ListenerAdapter {
+    private static final CharacterSubscribeCommand CHARACTER_SUBSCRIBE_COMMAND = new CharacterSubscribeCommand();
+    private static final UnsubscribeCommand UNSUBSCRIBE_COMMAND = new UnsubscribeCommand();
+    private static final InfoCommand INFO_COMMAND = new InfoCommand();
+
     public static void main(String[] args) throws LoginException {
         if (args.length != 2) {
             System.out.println("Bot token ([0]) and census api service id ([1]) have to be provided as a command line argument.");
@@ -45,8 +49,14 @@ public class PS2Bot extends ListenerAdapter {
         String content = event.getMessage().getContentRaw().toLowerCase();
         MessageChannel channel = event.getChannel();
 
-        if (content.startsWith(CharacterSubscribeCommand.COMMAND_SHORT_HAND)) {
-            new CharacterSubscribeCommand().run(event);
+        if (content.startsWith(CHARACTER_SUBSCRIBE_COMMAND.commandShortHand)) {
+            CHARACTER_SUBSCRIBE_COMMAND.run(event);
+        }
+        else if (content.startsWith(UNSUBSCRIBE_COMMAND.commandShortHand)) {
+            UNSUBSCRIBE_COMMAND.run(event);
+        }
+        else if (content.startsWith(INFO_COMMAND.commandShortHand)) {
+            INFO_COMMAND.run(event);
         }
 
         //Unknown commands.

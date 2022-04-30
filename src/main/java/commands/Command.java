@@ -20,6 +20,12 @@ public abstract class Command {
 
     protected final static String TWO_COLLECTION_COMMAND_REGEX = String.format("(\\%s(.*?)\\%s \\%s(.*?)\\%s)", OPENING_CURLY, CLOSING_CURLY, OPENING_CURLY, CLOSING_CURLY);
 
+    public final String commandShortHand;
+
+    public Command(String commandShortHand) {
+        this.commandShortHand = commandShortHand;
+    }
+
     public abstract void run(MessageReceivedEvent event);
 
     /**

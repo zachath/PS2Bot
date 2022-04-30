@@ -3,6 +3,7 @@
 package commands;
 
 import ps2lib.CensusAPI;
+import ps2lib.IllegalServiceIdException;
 import ps2lib.PS2PlayerFactory;
 import streaming.ClientCollection;
 import streaming.LiveStreamingClient;
@@ -17,9 +18,12 @@ import java.util.List;
  * When a subscribed event occurs, the user will be notified via a private message.
  */
 public class CharacterSubscribeCommand extends Command {
-    public static final String COMMAND_SHORT_HAND = "charsub";
+    public CharacterSubscribeCommand() {
+        super("charsub");
+    }
 
     /**
+     * Subscribes to the specified character events.
      * @param event The event of the bot receiving a message.
      */
     @Override
@@ -29,7 +33,7 @@ public class CharacterSubscribeCommand extends Command {
 
         String content = event.getMessage().getContentRaw();
 
-        String input = content.substring(COMMAND_SHORT_HAND.length() + 1);
+        String input = content.substring(commandShortHand.length() + 1);
 
         if (!inputMatchesFormat(input, TWO_COLLECTION_COMMAND_REGEX, event.getChannel())) {
             return;
@@ -46,13 +50,7 @@ public class CharacterSubscribeCommand extends Command {
                 client.connectBlocking();
             }
 
-            List<String> characterIDs = new ArrayList<>();
-
-            for (String character : args.get(CHARACTERS_LIST_INDEX)) {
-                try {
-                    characterIDs.add(PS2PlayerFactory.createPlayerFromName(character).id);
-                } catch (IllegalArgumentException ignored) {} //Ignore the failures to find players.
-            }
+            List<String> characterIDs = convertPlayerNamesToIds(args.get(CHARACTERS_LIST_INDEX));
 
             List<String> events = args.get(EVENTS_LIST_INDEX);
 
@@ -61,5 +59,25 @@ public class CharacterSubscribeCommand extends Command {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Take the names and return a list of the corresponding ids.
+     * @param names The names of the players.
+     * @return a list with the ids of the corresponding players.
+     */
+    private List<String> convertPlayerNamesToIds(List<String> names) {
+        List<String> ids = new ArrayList<>();
+
+        for (String character : names) {
+            try {
+                ids.add(PS2PlayerFactory.createPlayerFromName(character).id);
+            } catch (IllegalArgumentException ignored) {} //Ignore the failures to find players.
+            catch (IllegalServiceIdException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return ids;
     }
 }
