@@ -5,6 +5,8 @@ package streaming;
 import net.dv8tion.jda.api.entities.User;
 import ps2lib.CensusAPI;
 import ps2lib.IllegalServiceIdException;
+import ps2lib.Resolver;
+import ps2lib.event.CharacterEvent;
 import ps2lib.event.Event;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -33,11 +35,20 @@ public class LiveStreamingClient extends WebSocketClient {
             Event event = CensusAPI.handleLiveStreamingResponse(s);
             if (event != null) {
                 user.openPrivateChannel()
-                        .flatMap(channel -> channel.sendMessage(event.toString()))
+                        .flatMap(channel -> channel.sendMessage(formatMessage(event)))
                         .queue();
             }
         } catch (IllegalServiceIdException e) {
             e.printStackTrace();
+        }
+    }
+
+    private String formatMessage(Event event) {
+        if (event instanceof CharacterEvent characterEvent) {
+            return String.format("Type: %s\nPlayer: %s\nWorld: %s\nat %s", characterEvent.getClass().getSimpleName(), Resolver.resolvePlayerName(characterEvent.characterID), Resolver.resolveWorld(characterEvent.world_id), characterEvent.timestamp);
+        }
+        else {
+            return String.format("Type: %s\nWorld: %s\nat %s", event.getClass().getSimpleName(), Resolver.resolveWorld(event.world_id), event.timestamp);
         }
     }
 

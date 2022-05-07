@@ -54,7 +54,7 @@ public class CharacterSubscribeCommand extends Command {
 
             List<String> events = args.get(EVENTS_LIST_INDEX);
 
-            client.send(CensusAPI.formatPayLoadCharacter(characterIDs, events));
+            client.send(CensusAPI.formatCharacterSubscribePayLoad(characterIDs, events));
 
         } catch (Exception e) {
             e.printStackTrace();
