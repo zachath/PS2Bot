@@ -1,7 +1,7 @@
 //Zacharias Thorell
 
 import commands.CharacterSubscribeCommand;
-import commands.InfoCommand;
+import commands.IsOnlineCommand;
 import commands.UnsubscribeCommand;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.JDABuilder;
@@ -18,7 +18,7 @@ import javax.security.auth.login.LoginException;
 public class PS2Bot extends ListenerAdapter {
     private static final CharacterSubscribeCommand CHARACTER_SUBSCRIBE_COMMAND = new CharacterSubscribeCommand();
     private static final UnsubscribeCommand UNSUBSCRIBE_COMMAND = new UnsubscribeCommand();
-    private static final InfoCommand INFO_COMMAND = new InfoCommand();
+    private static final IsOnlineCommand IS_ONLINE_COMMAND = new IsOnlineCommand();
 
     public static void main(String[] args) throws LoginException {
         if (args.length != 2) {
@@ -55,8 +55,8 @@ public class PS2Bot extends ListenerAdapter {
         else if (content.startsWith(UNSUBSCRIBE_COMMAND.commandShortHand)) {
             UNSUBSCRIBE_COMMAND.run(event);
         }
-        else if (content.startsWith(INFO_COMMAND.commandShortHand)) {
-            INFO_COMMAND.run(event);
+        else if (content.startsWith(IS_ONLINE_COMMAND.commandShortHand)) {
+            IS_ONLINE_COMMAND.run(event);
         }
 
         //Unknown commands.

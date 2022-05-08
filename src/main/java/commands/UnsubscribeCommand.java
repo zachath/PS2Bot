@@ -30,7 +30,6 @@ public class UnsubscribeCommand extends Command {
                         .sendMessage("Unsubscribing from all events")
                         .queue();
             }
-            return;
         }
     }
 
@@ -41,6 +40,7 @@ public class UnsubscribeCommand extends Command {
     private void unsubscribeFromAllEvents(User user) {
         LiveStreamingClient client = ClientCollection.getClient(user);
         client.send(CensusAPI.CLEAR_SUBSCRIBE);
+        client.online.clear();
         client.close();
         ClientCollection.removeUser(user);
     }
